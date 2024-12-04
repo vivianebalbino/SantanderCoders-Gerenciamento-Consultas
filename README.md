@@ -10,7 +10,7 @@ Este projeto é uma aplicação de gerenciamento de consultas médicas, desenvol
 - **Login:** Autentique-se na aplicação para acessar o dashboard.
 
 - **Login válido:** usuário - email@email.com
--                   senha   - 123@4
+                    senha   - 123@4
 
 ### Dashboard
 

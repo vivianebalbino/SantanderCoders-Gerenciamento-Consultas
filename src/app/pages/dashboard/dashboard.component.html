@@ -1,0 +1,115 @@
+<app-navbar></app-navbar>
+
+<section class="bg-light py-5">
+  <div class="container">
+   
+    <div class="text-center mb-4">
+      <h2 class="display-4 text-primary">Dashboard de Consultas</h2>
+      <p class="lead">Gerencie e acompanhe as consultas com facilidade e eficiência.</p>
+    </div>
+
+    
+    <div class="bg-white p-4 rounded-3 shadow-sm mb-4">
+      <h3 class="text-center mb-4">Criar Nova Consulta</h3>
+      <form (ngSubmit)="onCreateAppointment()">
+        <div class="mb-3">
+          <label for="specialty" class="form-label">Especialidade</label>
+          <input id="specialty" type="text" class="form-control" [(ngModel)]="newAppointment.specialty" name="specialty" required />
+        </div>
+        <div class="mb-3">
+          <label for="doctor" class="form-label">Médico</label>
+          <input id="doctor" type="text" class="form-control" [(ngModel)]="newAppointment.doctor" name="doctor" required />
+        </div>
+        <div class="mb-3">
+          <label for="date" class="form-label">Data</label>
+          <input id="date" type="date" class="form-control" [(ngModel)]="newAppointment.date" name="date" required />
+        </div>
+        <div class="mb-3">
+          <label for="time" class="form-label">Hora</label>
+          <input id="time" type="time" class="form-control" [(ngModel)]="newAppointment.time" name="time" required />
+        </div>
+        <div class="mb-3">
+          <label for="obs" class="form-label">Observações</label>
+          <textarea id="obs" class="form-control" [(ngModel)]="newAppointment.obs" name="obs"></textarea>
+        </div>
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-success">Criar Consulta</button>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="table-responsive shadow-sm rounded-3 bg-white p-4">
+      <h3 class="text-center mb-4">Lista de Consultas</h3>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Especialidade</th>
+            <th>Médico</th>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let appointment of appointments">
+            <td>{{ appointment.specialty }}</td>
+            <td>{{ appointment.doctor }}</td>
+            <td>{{ appointment.date | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ appointment.time }}</td>
+            <td>
+              <span [ngClass]="{
+                'text-success': appointment.status === 'DONE',
+                'text-warning': appointment.status === 'SCHEDULED',
+                'text-danger': appointment.status === 'CANCELED'
+              }">
+                {{ appointment.status }}
+              </span>
+            </td>
+            <td class="d-flex gap-2">
+              <button *ngIf="isAdmin" class="btn btn-success btn-sm text-white" (click)="completeAppointment(appointment.id)">
+                Concluir
+              </button>
+              <button class="btn btn-warning btn-sm text-white" (click)="cancelAppointment(appointment.id)">
+                Cancelar
+              </button>
+              <button class="btn btn-info btn-sm text-white" (click)="selectAppointment(appointment)">
+                Editar
+              </button>
+              <button *ngIf="isAdmin" class="btn btn-danger btn-sm text-white" (click)="delete(appointment.id)">
+                Excluir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="selectedAppointment" class="mt-4 bg-white p-4 rounded-3 shadow-sm">
+      <h3 class="text-center mb-4">Editar Consulta</h3>
+      <form (ngSubmit)="editAppointment()">
+        <div class="mb-3">
+          <label for="specialty" class="form-label">Especialidade</label>
+          <input id="specialty" type="text" class="form-control" [(ngModel)]="selectedAppointment.specialty" name="specialty" required />
+        </div>
+        <div class="mb-3">
+          <label for="doctor" class="form-label">Médico</label>
+          <input id="doctor" type="text" class="form-control" [(ngModel)]="selectedAppointment.doctor" name="doctor" required />
+        </div>
+        <div class="mb-3">
+          <label for="date" class="form-label">Data</label>
+          <input id="date" type="date" class="form-control" [(ngModel)]="selectedAppointment.date" name="date" required />
+        </div>
+        <div class="mb-3">
+          <label for="time" class="form-label">Hora</label>
+          <input id="time" type="time" class="form-control" [(ngModel)]="selectedAppointment.time" name="time" required />
+        </div>
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+          <button type="button" class="btn btn-secondary" (click)="selectedAppointment = null">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

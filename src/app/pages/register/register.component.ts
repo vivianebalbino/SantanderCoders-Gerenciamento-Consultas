@@ -1,17 +1,19 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { LoadingComponent } from '../../components/loading/loading.component';
 
 @Component({
   standalone: true,
   selector: 'app-register',
   templateUrl: './register.component.html',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, LoadingComponent, RouterModule],
 })
 export class RegisterComponent {
   registerForm: FormGroup;
+  isLoading = false;
 
   constructor(private authService: AuthService, private router: Router) {
     this.registerForm = new FormGroup({
@@ -24,13 +26,18 @@ export class RegisterComponent {
 
   onRegister() {
     if (this.registerForm.valid) {
+      this.isLoading = true;
       const { name, email, password, role } = this.registerForm.value; 
       this.authService.register(name, email, password, role).subscribe({
         next: () => {
           alert('Cadastro realizado com sucesso!');
           this.router.navigate(['/login']);
+          this.isLoading = false;
         },
-        error: () => alert('Erro ao realizar cadastro!'),
+        error: (err) => {
+          alert('Erro ao realizar cadastro!')
+          this.isLoading = false;
+        },
       });
     } else {
       alert('Preencha todos os campos corretamente!');
